@@ -33,10 +33,11 @@ class TiktokHandler2:
         return UserProfileFilter(response)
 
     async def get_user_posts(self, secUid: str = "", cursor: int = 0):
-            crawler = TiktokCrawler()
-            params = UserPost(secUid=secUid, cursor=cursor, count=35)
-            response = await crawler.fetch_user_posts(params)
-            video = UserPostFilter(response)
+        crawler = TiktokCrawler()
+        params = UserPost(secUid=secUid, cursor=cursor, count=35)
+        response = await crawler.fetch_user_posts(params)
+        video = UserPostFilter(response)
+        return video
 
 async def main(kwargs):
     mode = kwargs.get("mode")
