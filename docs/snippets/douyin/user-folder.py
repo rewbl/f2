@@ -1,4 +1,4 @@
-// #region create-user-folder
+#region create-user-folder
 from f2.apps.douyin.utils import create_user_folder
 
 
@@ -19,10 +19,10 @@ if __name__ == "__main__":
     print(create_user_folder(kwargs, current_nickname))
     # X:\......\Download\douyin\post\New Nickname
 
-// #endregion create-user-folder
+#endregion create-user-folder
 
 
-// #region rename-user-folder
+#region rename-user-folder
 import asyncio
 from f2.apps.douyin.db import AsyncUserDB
 from f2.apps.douyin.utils import rename_user_folder
@@ -59,4 +59,4 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
-// #endregion rename-user-folder
+#endregion rename-user-folder

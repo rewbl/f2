@@ -46,7 +46,7 @@ class TiktokHandler:
         self.downloader = TiktokDownloader(kwargs)
 
     async def handler_user_profile(
-        self, secUid: str, uniqueId: str = ""
+        self, secUid: str ="", uniqueId: str = ""
     ) -> UserProfileFilter:
         """
         用于获取指定用户的个人信息

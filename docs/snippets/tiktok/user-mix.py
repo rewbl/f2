@@ -1,4 +1,4 @@
-// #region playlist-sinppet
+#region playlist-sinppet
 import asyncio
 from f2.apps.tiktok.handler import TiktokHandler
 from f2.apps.tiktok.utils import SecUserIdFetcher
@@ -26,9 +26,9 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
-// #endregion playlist-sinppet
+#endregion playlist-sinppet
 
-// #region select-playlist-sinppet
+#region select-playlist-sinppet
 import asyncio
 from f2.apps.tiktok.handler import TiktokHandler
 
@@ -58,4 +58,4 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
-// #endregion select-playlist-sinppet
+#endregion select-playlist-sinppet

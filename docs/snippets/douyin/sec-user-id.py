@@ -1,4 +1,4 @@
-// #region single-user-id-snippet
+#region single-user-id-snippet
 import asyncio
 from f2.apps.douyin.utils import SecUserIdFetcher
 
@@ -10,10 +10,10 @@ async def main():
 if __name__ == "__main__":
     print(asyncio.run(main()))
 
-// #endregion single-user-id-snippet
+#endregion single-user-id-snippet
 
 
-// #region multi-user-id-snippet
+#region multi-user-id-snippet
 import asyncio
 from f2.apps.douyin.utils import SecUserIdFetcher
 from f2.utils.utils import extract_valid_urls
@@ -35,4 +35,4 @@ async def main():
 if __name__ == "__main__":
     print(asyncio.run(main()))
 
-// #endregion multi-user-id-snippet
+#endregion multi-user-id-snippet

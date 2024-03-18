@@ -1,4 +1,4 @@
-// #region single-secuid-snippet
+#region single-secuid-snippet
 import asyncio
 from f2.apps.tiktok.utils import SecUserIdFetcher
 
@@ -10,10 +10,10 @@ async def main():
 if __name__ == "__main__":
     print(asyncio.run(main()))
 
-// #endregion single-secuid-snippet
+#endregion single-secuid-snippet
 
 
-// #region multi-secuid-snippet
+#region multi-secuid-snippet
 import asyncio
 from f2.apps.tiktok.utils import SecUserIdFetcher
 from f2.utils.utils import extract_valid_urls
@@ -34,4 +34,4 @@ async def main():
 if __name__ == "__main__":
     print(asyncio.run(main()))
 
-// #endregion multi-secuid-snippet
+#endregion multi-secuid-snippet

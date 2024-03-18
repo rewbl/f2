@@ -1,6 +1,6 @@
 # path: f2/apps/tiktok/models.py
 
-from typing import Any
+from typing import Any, Optional
 from pydantic import BaseModel
 from urllib.parse import quote, unquote
 
@@ -47,8 +47,8 @@ class BaseRequestModel(BaseModel):
 
 # router model
 class UserProfile(BaseRequestModel):
-    secUid: str
-    uniqueId: str
+    secUid: Optional[str] = ""
+    uniqueId: Optional[str] = ""
 
 
 class UserPost(BaseRequestModel):
