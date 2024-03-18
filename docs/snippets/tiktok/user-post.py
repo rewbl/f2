@@ -13,7 +13,7 @@ kwargs = {
 
 
 async def main():
-    secUid = await SecUserIdFetcher.get_secuid("https://www.tiktok.com/@vantoan___")
+    secUid = 'MS4wLjABAAAAQhcYf_TjRKUku-aF8oqngAfzrYksgGLRz8CKMciBFdfR54HQu3qGs-WoJ-KO7hO8'
     print(
         [
             aweme_data_list
