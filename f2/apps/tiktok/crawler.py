@@ -1,11 +1,5 @@
 # path: f2/apps/tiktok/crawler.py
 
-import f2
-
-from f2.log.logger import logger
-from f2.i18n.translator import _
-from f2.utils.conf_manager import ConfigManager
-from f2.crawlers.base_crawler import BaseCrawler
 from f2.apps.tiktok.api import TiktokAPIEndpoints as tkendpoint
 from f2.apps.tiktok.model import (
     UserProfile,
@@ -18,21 +12,21 @@ from f2.apps.tiktok.model import (
     PostComment,
 )
 from f2.apps.tiktok.utils import XBogusManager
+from f2.crawlers.base_crawler import BaseCrawler
+from f2.i18n.translator import _
+from f2.log.logger import logger
 
 
 class TiktokCrawler(BaseCrawler):
     def __init__(self, kwargs: dict = {}):
-        f2_manager = ConfigManager(f2.F2_CONFIG_FILE_PATH)
-        f2_conf = f2_manager.get_config("f2").get("tiktok")
-        proxies_conf = kwargs.get("proxies", {"http": None, "https": None})
         proxies = {
-            "http://": proxies_conf.get("http", None),
-            "https://": proxies_conf.get("https", None),
+            "http://": None,
+            "https://": None,
         }
 
         self.headers = {
-            "User-Agent": f2_conf["headers"]["User-Agent"],
-            "Referer": f2_conf["headers"]["Referer"],
+            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36',
+            "Referer": 'https://www.tiktok.com/',
             "Cookie": kwargs["cookie"],
         }
 

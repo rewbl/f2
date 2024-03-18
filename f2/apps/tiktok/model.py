@@ -35,7 +35,7 @@ class BaseRequestModel(BaseModel):
     os: str = "windows"
     priority_region: str = ""
     referer: str = ""
-    region: str = "SG"  # SG JP KR...
+    region: str = "US"  # SG JP KR...
     root_referer: str = quote("https://www.tiktok.com/", safe="")
     screen_height: int = 1080
     screen_width: int = 1920

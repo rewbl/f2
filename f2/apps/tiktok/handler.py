@@ -63,7 +63,7 @@ class TiktokHandler:
             raise ValueError(_("至少提供 secUid 或 uniqueId 中的一个参数"))
 
         async with TiktokCrawler(self.kwargs) as crawler:
-            params = UserProfile(region="SG", secUid=secUid, uniqueId=uniqueId)
+            params = UserProfile(region="US", secUid=secUid, uniqueId=uniqueId)
             response = await crawler.fetch_user_profile(params)
             return UserProfileFilter(response)
 
@@ -313,7 +313,7 @@ class TiktokHandler:
 
         logger.debug(_("开始爬取用户: {0} 发布的视频").format(secUid))
 
-        while videos_collected < max_counts:
+        while videos_collected < 20:
             current_request_size = min(page_counts, max_counts - videos_collected)
 
             logger.debug("=====================================")

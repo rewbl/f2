@@ -1,5 +1,6 @@
 import asyncio
-from f2.apps.tiktok.handler import TiktokHandler
+
+from f2.apps.tiktok.handler2 import TiktokHandler2
 
 kwargs = {
     "headers": {
@@ -13,12 +14,12 @@ kwargs = {
 
 async def main():
     secUid = (
-        "MS4wLjABAAAAQhcYf_TjRKUku-aF8oqngAfzrYksgGLRz8CKMciBFdfR54HQu3qGs-WoJ-KO7hO8"
+        "MS4wLjABAAAAMUO3QAXA8dzE8GiaYn3RtvPGkqLVYG6bWnQkgF93Wdz8SWRlR4n77UuZWmaTn_fq"
     )
-    uniqueId = "vantoan___"
-    print(await TiktokHandler(kwargs).handler_user_profile(secUid=secUid))
-    print("-------------------")
-    print(await TiktokHandler(kwargs).handler_user_profile(uniqueId=uniqueId))
+    uniqueId = "saritacharrer.s"
+    profile = await TiktokHandler2(kwargs).handler_user_profile(secUid=secUid)
+    profle2 = await TiktokHandler2(kwargs).handler_user_profile(uniqueId=uniqueId)
+    assert profile.uid == profle2.uid
 
 
 if __name__ == "__main__":
