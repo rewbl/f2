@@ -34,7 +34,7 @@ class TiktokHandler2:
 
     async def get_user_posts(self, secUid: str = "", cursor: int = 0):
         crawler = TiktokCrawler()
-        params = UserPost(secUid=secUid, cursor=cursor, count=35)
+        params = UserPost(secUid=secUid, cursor=cursor)
         response = await crawler.fetch_user_posts(params)
         video = UserPostFilter(response)
         return video

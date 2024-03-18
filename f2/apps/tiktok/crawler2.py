@@ -13,24 +13,21 @@ from f2.apps.tiktok.model import (
 )
 from f2.apps.tiktok.utils import XBogusManager
 from f2.crawlers.base_crawler import BaseCrawler
+from f2.crawlers.base_crawler2 import BaseCrawler2
 from f2.i18n.translator import _
 from f2.log.logger import logger
 
 
-class TiktokCrawler2(BaseCrawler):
+class TiktokCrawler2(BaseCrawler2):
     def __init__(self, kwargs: dict = {}):
-        proxies = {
-            "http://": None,
-            "https://": None,
-        }
+
 
         self.headers = {
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36',
             "Referer": 'https://www.tiktok.com/',
-            "Cookie": kwargs["cookie"],
         }
 
-        super().__init__(proxies=proxies, crawler_headers=self.headers)
+        super().__init__(crawler_headers=self.headers)
 
     async def fetch_user_profile(self, params: UserProfile):
         endpoint = XBogusManager.model_2_endpoint(

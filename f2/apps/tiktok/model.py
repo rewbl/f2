@@ -1,12 +1,13 @@
 # path: f2/apps/tiktok/models.py
 
 from typing import Any, Optional
+
+from f2.apps.douyin.utils import VerifyFpManager
 from pydantic import BaseModel
 from urllib.parse import quote, unquote
 
 from f2.apps.tiktok.utils import TokenManager
 from f2.utils.utils import get_timestamp
-
 
 # Model
 class BaseRequestModel(BaseModel):
@@ -35,7 +36,7 @@ class BaseRequestModel(BaseModel):
     os: str = "windows"
     priority_region: str = ""
     referer: str = ""
-    region: str = "US"  # SG JP KR...
+    region: str = "SG"  # SG JP KR...
     root_referer: str = quote("https://www.tiktok.com/", safe="")
     screen_height: int = 1080
     screen_width: int = 1920

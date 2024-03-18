@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import AsyncGenerator
 
+from f2.apps.tiktok.crawler2 import TiktokCrawler2
 from f2.i18n.translator import _
 from f2.log.logger import logger
 from f2.utils.mode_handler import mode_handler, mode_function_map
@@ -43,7 +44,6 @@ class TiktokHandler:
 
     def __init__(self, kwargs) -> None:
         self.kwargs = kwargs
-        self.downloader = TiktokDownloader(kwargs)
 
     async def handler_user_profile(
         self, secUid: str ="", uniqueId: str = ""
@@ -251,7 +251,7 @@ class TiktokHandler:
         """
 
         logger.debug(_("开始爬取视频: {0}").format(itemId))
-        async with TiktokCrawler(self.kwargs) as crawler:
+        async with TiktokCrawler2() as crawler:
             params = PostDetail(itemId=itemId)
             response = await crawler.fetch_post_detail(params)
             video = PostDetailFilter(response)
