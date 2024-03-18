@@ -22,16 +22,13 @@ class TiktokHandler2:
     # 需要忽略的字段（需过滤掉有时效性的字段）
     ignore_fields = ["video_play_addr", "images", "video_bit_rate", "cover"]
 
-    def __init__(self, kwargs) -> None:
-        self.kwargs = kwargs
-
     async def handler_user_profile(
         self, secUid: str ="", uniqueId: str = ""
     ) -> UserProfileFilter:
         if not secUid and not uniqueId:
             raise ValueError(_("至少提供 secUid 或 uniqueId 中的一个参数"))
 
-        async with TiktokCrawler(self.kwargs) as crawler:
+        async with TiktokCrawler() as crawler:
             params = UserProfile(region="US", secUid=secUid, uniqueId=uniqueId)
             response = await crawler.fetch_user_profile(params)
             return UserProfileFilter(response)
@@ -40,7 +37,7 @@ class TiktokHandler2:
 async def main(kwargs):
     mode = kwargs.get("mode")
     if mode in mode_function_map:
-        await mode_function_map[mode](TiktokHandler2(kwargs))
+        await mode_function_map[mode](TiktokHandler2())
     else:
         logger.error(_("不存在该模式: {0}").format(mode))
         rich_console.print(_("不存在该模式: {0}").format(mode))
