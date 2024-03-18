@@ -1,12 +1,11 @@
 # path: f2/apps/tiktok/handler.py
 
 from f2.apps.tiktok.crawler import TiktokCrawler
-from f2.apps.tiktok.dl import TiktokDownloader
 from f2.apps.tiktok.filter import (
-    UserProfileFilter,
+    UserProfileFilter, UserPostFilter,
 )
 from f2.apps.tiktok.model import (
-    UserProfile,
+    UserProfile, UserPost,
 )
 from f2.cli.cli_console import RichConsoleManager
 from f2.i18n.translator import _
@@ -28,11 +27,16 @@ class TiktokHandler2:
         if not secUid and not uniqueId:
             raise ValueError(_("至少提供 secUid 或 uniqueId 中的一个参数"))
 
-        async with TiktokCrawler() as crawler:
-            params = UserProfile(region="US", secUid=secUid, uniqueId=uniqueId)
-            response = await crawler.fetch_user_profile(params)
-            return UserProfileFilter(response)
+        crawler = TiktokCrawler()
+        params = UserProfile(region="US", secUid=secUid, uniqueId=uniqueId)
+        response = await crawler.fetch_user_profile(params)
+        return UserProfileFilter(response)
 
+    async def get_user_posts(self, secUid: str = "", cursor: int = 0):
+            crawler = TiktokCrawler()
+            params = UserPost(secUid=secUid, cursor=cursor, count=35)
+            response = await crawler.fetch_user_posts(params)
+            video = UserPostFilter(response)
 
 async def main(kwargs):
     mode = kwargs.get("mode")
