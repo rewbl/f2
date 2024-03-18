@@ -9,14 +9,6 @@ from f2.crawlers.base_crawler import BaseCrawler
 
 
 class TiktokCrawler(BaseCrawler):
-    def __init__(self, kwargs: dict = {}):
-
-        self.headers = {
-            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36',
-            "Referer": 'https://www.tiktok.com/',
-        }
-
-        super().__init__(crawler_headers=self.headers)
 
     async def fetch_user_profile(self, params: UserProfile):
         endpoint = XBogusManager.model_2_endpoint(
