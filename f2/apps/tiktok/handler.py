@@ -313,7 +313,7 @@ class TiktokHandler:
 
         logger.debug(_("开始爬取用户: {0} 发布的视频").format(secUid))
 
-        while videos_collected < max_counts:
+        while videos_collected < 20:
             current_request_size = min(page_counts, max_counts - videos_collected)
 
             logger.debug("=====================================")
