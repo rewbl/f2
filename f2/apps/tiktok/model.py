@@ -43,7 +43,8 @@ class BaseRequestModel(BaseModel):
     webcast_language: str = "zh-Hans"
     tz_name: str = quote("Asia/Hong_Kong", safe="")
     # verifyFp: str = VerifyFpManager.gen_verify_fp()
-    msToken: str = TokenManager.gen_real_msToken()
+    # msToken: str = TokenManager.gen_real_msToken()
+    msToken: str = 'x541bHi1s7WSeHchOdUW2yAEOEP7zrlEl1OGzqFe6J3tq-HZYOtucwzWK2O_2gA3E9xoxmG7QN6dsaOp1T9HuCIbKNm4wLQv-nSuZhH8OQyUvHu2ySp1EDp5xt3STiYycrQ5VJg='
 
 
 # router model
