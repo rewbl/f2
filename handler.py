@@ -8,7 +8,7 @@ from model import (
     UserProfile, UserPost, UserFollowing,
 )
 
-class TiktokHandler2:
+class TiktokHandler:
 
     # 需要忽略的字段（需过滤掉有时效性的字段）
     ignore_fields = ["video_play_addr", "images", "video_bit_rate", "cover"]

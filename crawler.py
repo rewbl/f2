@@ -1,7 +1,7 @@
 
 import requests as requests
 
-from api import TiktokAPIEndpoints as tkendpoint
+from conf_manager import TiktokAPIEndpoints as tkendpoint
 from model import (
     UserProfile, UserPost, UserFollowing,
 )

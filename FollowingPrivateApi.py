@@ -5,7 +5,7 @@ from typing import List
 from motor.motor_asyncio import AsyncIOMotorCollection
 from pymongo import UpdateOne
 
-from main import TikTokDb
+from conf_manager import TikTokDb
 from crawler import TiktokCrawler
 from filter import UserFollowingFilter
 from model import UserFollowing

@@ -1,9 +1,9 @@
 # path: f2/apps/tiktok/filter.py
 
-from typing import List, Union
+from typing import List
 
 from model import JSONModel
-from utils import timestamp_2_str, _get_first_item_from_list, replaceT
+from utils import timestamp_2_str, replaceT
 
 
 class UserSummaryFilter(JSONModel):
