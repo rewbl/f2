@@ -11,6 +11,7 @@ from unittest.mock import Mock
 
 import httpx
 import importlib_resources
+import motor
 
 logger = Mock()
 
@@ -331,3 +332,71 @@ def replaceT(obj: Union[str, Any]) -> Union[str, Any]:
         return re.sub(reSub, "_", obj)
 
     # raise TypeError("输入应为字符串或字符串列表")
+
+
+class TiktokAPIEndpoints:
+    """
+    API Endpoints for TikTok
+    """
+
+    # 抖音域名 (Tiktok Domain)
+    TIKTOK_DOMAIN = "https://www.tiktok.com"
+
+    # 直播域名 (Webcast Domain)
+    WEBCAST_DOMAIN = "https://webcast.tiktok.com"
+
+    # 登录 (Login)
+    LOGIN_ENDPOINT = f"{TIKTOK_DOMAIN}/login/"
+
+    # 首页推荐 (Home Recommend)
+    HOME_RECOMMEND = f"{TIKTOK_DOMAIN}/api/recommend/item_list/"
+
+    # 用户详细信息 (User Detail Info)
+    USER_DETAIL = f"{TIKTOK_DOMAIN}/api/user/detail/"
+
+    # 用户作品 (User Post)
+    USER_POST = f"{TIKTOK_DOMAIN}/api/post/item_list/"
+
+    # 用户点赞 (User Like)
+    USER_LIKE = f"{TIKTOK_DOMAIN}/api/favorite/item_list/"
+
+    # 用户收藏 (User Collect)
+    USER_COLLECT = f"{TIKTOK_DOMAIN}/api/user/collect/item_list/"
+
+    # 用户播放列表 (User Play List)
+    USER_PLAY_LIST = f"{TIKTOK_DOMAIN}/api/user/playlist/"
+
+    # 用户合辑 (User Mix)
+    USER_MIX = f"{TIKTOK_DOMAIN}/api/mix/item_list/"
+
+    # 猜你喜欢 (Guess You Like)
+    GUESS_YOU_LIKE = f"{TIKTOK_DOMAIN}/api/related/item_list/"
+
+    # 用户关注 (User Follow)
+    # USER_FOLLOW = f"{TIKTOK_DOMAIN}/api/relation/user/list/"
+
+    # 用户粉丝 (User Fans)
+    # USER_FANS = f"{TIKTOK_DOMAIN}/api/relation/follower/list/"
+
+    # 作品信息 (Post Detail)
+    AWEME_DETAIL = f"{TIKTOK_DOMAIN}/api/item/detail/"
+
+    # 作品评论 (Post Comment)
+    POST_COMMENT = f"{TIKTOK_DOMAIN}/api/comment/list/"
+
+    USER_FOLLOWING = f"{TIKTOK_DOMAIN}/api/user/list/"
+
+
+class TikTokMongoDb:
+    def __init__(self):
+        self.client = motor.motor_asyncio.AsyncIOMotorClient(
+            'mongodb://192.168.196.85:27018,192.168.196.86:27018,192.168.196.87:27018/?replicaSet=tiktok')
+        self.db = self.client['tiktok']
+        self.following_lists = self.db['following_lists']
+        self.following_relations = self.db['following_relations']
+        self.tiktok_users = self.db['tiktok_users']
+        self.tiktok_follow_list_candidates = self.db['tiktok_users_follow_no_lists_view']
+        self.tiktok_follow_view = self.db['tiktok_users_follow_view']
+
+
+TikTokDb = TikTokMongoDb()

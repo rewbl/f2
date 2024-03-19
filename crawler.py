@@ -1,11 +1,10 @@
 
 import requests as requests
 
-from conf_manager import TiktokAPIEndpoints as tkendpoint
 from model import (
     UserProfile, UserPost, UserFollowing,
 )
-from utils import XBogusManager
+from utils import XBogusManager, TiktokAPIEndpoints as tkendpoint
 
 headers = {
     "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36',
