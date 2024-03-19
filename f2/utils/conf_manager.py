@@ -1,4 +1,5 @@
 # path: f2/utils/conf_manager.py
+from unittest.mock import Mock
 
 import f2
 import time
@@ -6,13 +7,10 @@ import yaml
 import click
 
 from pathlib import Path
-from f2.exceptions.file_exceptions import (
-    FileNotFound,
-    FilePermissionError,
-)
 from f2.utils.utils import get_resource_path
-from f2.i18n.translator import _
-from f2.log.logger import logger
+def _(msg):
+    return msg
+logger=Mock()
 
 
 class ConfigManager:
@@ -29,9 +27,9 @@ class ConfigManager:
 
         try:
             if not self.filepath.exists():
-                raise FileNotFound(_("'{0}' 配置文件路径不存在").format(self.filepath))
+                raise Exception(_("'{0}' 配置文件路径不存在").format(self.filepath))
             return yaml.safe_load(self.filepath.read_text(encoding="utf-8")) or {}
-        except FileNotFound as e:
+        except Exception as e:
             e.display_error()
             time.sleep(2)
             exit(0)
@@ -58,7 +56,7 @@ class ConfigManager:
         try:
             self.filepath.write_text(yaml.dump(config), encoding="utf-8")
         except PermissionError:
-            raise FilePermissionError(
+            raise Exception(
                 _("'{0}' 配置文件路径无写权限").format(self.filepath)
             )
 

@@ -1,4 +1,5 @@
 # path: f2/apps/tiktok/utils.py
+from unittest.mock import Mock
 
 import f2
 import re
@@ -9,8 +10,10 @@ import asyncio
 from typing import Union
 from pathlib import Path
 
-from f2.i18n.translator import _
-from f2.log.logger import logger
+logger=Mock()
+def _(msg):
+    return msg
+
 from f2.utils.xbogus import XBogus as XB
 from f2.utils.conf_manager import ConfigManager
 from f2.utils.utils import (
@@ -18,13 +21,6 @@ from f2.utils.utils import (
     get_timestamp,
     extract_valid_urls,
     split_filename,
-)
-from f2.exceptions.api_exceptions import (
-    APIError,
-    APIConnectionError,
-    APIResponseError,
-    APIUnauthorizedError,
-    APINotFoundError,
 )
 
 
@@ -69,14 +65,14 @@ class TokenManager:
                 )
 
                 if response.status_code == 401:
-                    raise APIUnauthorizedError(_("由于某些错误, 无法获取msToken"))
+                    raise Exception(_("由于某些错误, 无法获取msToken"))
                 elif response.status_code == 404:
-                    raise APINotFoundError(_("无法找到API端点"))
+                    raise Exception(_("无法找到API端点"))
 
                 msToken = str(httpx.Cookies(response.cookies).get("msToken"))
 
                 if len(msToken) not in [148]:
-                    raise APIResponseError(
+                    raise Exception(
                         _(
                             "msToken: 请检查并更新 f2 中 conf.yaml 配置文件中的 msToken，以匹配 tiktok 新规则。"
                         )
@@ -86,7 +82,7 @@ class TokenManager:
 
             except httpx.RequestError:
                 # 捕获所有与 httpx 请求相关的异常情况 (Captures all httpx request-related exceptions)
-                raise APIConnectionError(
+                raise Exception(
                     _(
                         "连接端点失败，检查网络环境或代理：{0} 代理：{1} 类名：{2}"
                     ).format(cls.token_conf["url"], cls.proxies, cls.__name__)
@@ -94,11 +90,11 @@ class TokenManager:
 
             except httpx.HTTPStatusError as e:
                 # 捕获 httpx 的状态代码错误 (captures specific status code errors from httpx)
-                raise APIResponseError(
+                raise Exception(
                     f"HTTP Status Code {e.response.status_code}: {e.response.text}"
                 )
 
-            except APIError as e:
+            except Exception as e:
                 # 返回虚假的msToken (Return a fake msToken)
                 logger.info(_("生成虚假的msToken"))
                 return cls.gen_false_msToken()
@@ -126,14 +122,14 @@ class TokenManager:
                 )
 
                 if response.status_code == 401:
-                    raise APIUnauthorizedError(_("401 由于某些错误, 无法获取ttwid"))
+                    raise Exception(_("401 由于某些错误, 无法获取ttwid"))
                 elif response.status_code == 404:
-                    raise APINotFoundError(_("404 无法找到API端点"))
+                    raise Exception(_("404 无法找到API端点"))
 
                 ttwid = httpx.Cookies(response.cookies).get("ttwid")
 
                 if ttwid is None:
-                    raise APIResponseError(
+                    raise Exception(
                         _("ttwid: 检查没有通过, 请更新配置文件中的ttwid")
                     )
 
@@ -141,7 +137,7 @@ class TokenManager:
 
             except httpx.RequestError:
                 # 捕获所有与 httpx 请求相关的异常情况 (Captures all httpx request-related exceptions)
-                raise APIConnectionError(
+                raise Exception(
                     _(
                         "连接端点失败，检查网络环境或代理：{0} 代理：{1} 类名：{2}"
                     ).format(cls.ttwid_conf["url"], cls.proxies, cls.__name__)
@@ -149,7 +145,7 @@ class TokenManager:
 
             except httpx.HTTPStatusError as e:
                 # 捕获 httpx 的状态代码错误 (captures specific status code errors from httpx)
-                raise APIResponseError(
+                raise Exception(
                     f"HTTP Status Code {e.response.status_code}: {e.response.text}"
                 )
 
@@ -164,14 +160,14 @@ class TokenManager:
                 response = client.get(cls.odin_tt_conf["url"])
 
                 if response.status_code == 401:
-                    raise APIUnauthorizedError(_("401 由于某些错误, 无法获取ttwid"))
+                    raise Exception(_("401 由于某些错误, 无法获取ttwid"))
                 elif response.status_code == 404:
-                    raise APINotFoundError(_("404 无法找到API端点"))
+                    raise Exception(_("404 无法找到API端点"))
 
                 odin_tt = httpx.Cookies(response.cookies).get("odin_tt")
 
                 if odin_tt is None:
-                    raise APIResponseError(
+                    raise Exception(
                         _("odin_tt: 检查没有通过, 请更新配置文件中的odin_tt")
                     )
 
@@ -179,7 +175,7 @@ class TokenManager:
 
             except httpx.RequestError:
                 # 捕获所有与 httpx 请求相关的异常情况 (Captures all httpx request-related exceptions)
-                raise APIConnectionError(
+                raise Exception(
                     _(
                         "连接端点失败，检查网络环境或代理：{0} 代理：{1} 类名：{2}"
                     ).format(cls.odin_tt_conf["url"], cls.proxies, cls.__name__)
@@ -187,7 +183,7 @@ class TokenManager:
 
             except httpx.HTTPStatusError as e:
                 # 捕获 httpx 的状态代码错误 (captures specific status code errors from httpx)
-                raise APIResponseError(
+                raise Exception(
                     f"HTTP Status Code {e.response.status_code}: {e.response.text}"
                 )
 
@@ -249,7 +245,7 @@ class SecUserIdFetcher:
 
         if url is None:
             raise (
-                APINotFoundError(_("输入的URL不合法。类名：{0}".format(cls.__name__)))
+                Exception(_("输入的URL不合法。类名：{0}".format(cls.__name__)))
             )
 
         transport = httpx.AsyncHTTPTransport(retries=5)
@@ -261,7 +257,7 @@ class SecUserIdFetcher:
 
                 if response.status_code in {200, 444}:
                     if cls._TIKTOK_NOTFOUND_PARREN.search(str(response.url)):
-                        raise APINotFoundError(
+                        raise Exception(
                             _(
                                 "页面不可用，可能是由于区域限制（代理）造成的。类名: {0}".format(
                                     cls.__name__
@@ -270,7 +266,7 @@ class SecUserIdFetcher:
                         )
                     match = cls._TIKTOK_SECUID_PARREN.search(str(response.text))
                     if not match:
-                        raise APIResponseError(
+                        raise Exception(
                             _(
                                 "未在响应的地址中找到sec_uid, 检查链接是否为用户主页类名: {0}".format(
                                     cls.__name__
@@ -293,7 +289,7 @@ class SecUserIdFetcher:
                     raise ConnectionError(_("接口状态码异常, 请检查重试"))
 
             except httpx.RequestError:
-                raise APIConnectionError(
+                raise Exception(
                     _(
                         "连接端点失败，检查网络环境或代理：{0} 代理：{1} 类名：{2}"
                     ).format(url, TokenManager.proxies, cls.__name__)
@@ -319,7 +315,7 @@ class SecUserIdFetcher:
 
         if urls == []:
             raise (
-                APINotFoundError(
+                Exception(
                     _("输入的URL List不合法。类名：{0}".format(cls.__name__))
                 )
             )
@@ -346,7 +342,7 @@ class SecUserIdFetcher:
 
         if url is None:
             raise (
-                APINotFoundError(_("输入的URL不合法。类名：{0}".format(cls.__name__)))
+                Exception(_("输入的URL不合法。类名：{0}".format(cls.__name__)))
             )
 
         transport = httpx.AsyncHTTPTransport(retries=5)
@@ -359,7 +355,7 @@ class SecUserIdFetcher:
                 if response.status_code in {200, 444}:
                     match = cls._TIKTOK_UNIQUEID_PARREN.search(str(response.url))
                     if not match:
-                        raise APIResponseError(_("未在响应中找到unique_id"))
+                        raise Exception(_("未在响应中找到unique_id"))
 
                     unique_id = match.group(1)
 
@@ -375,7 +371,7 @@ class SecUserIdFetcher:
                     )
 
             except httpx.RequestError:
-                raise APIConnectionError(
+                raise Exception(
                     _(
                         "连接端点失败，检查网络环境或代理：{0} 代理：{1} 类名：{2}"
                     ).format(url, TokenManager.proxies, cls.__name__),
@@ -401,7 +397,7 @@ class SecUserIdFetcher:
 
         if urls == []:
             raise (
-                APINotFoundError(
+                Exception(
                     _("输入的URL List不合法。类名：{0}".format(cls.__name__))
                 )
             )
@@ -436,7 +432,7 @@ class AwemeIdFetcher:
 
         if url is None:
             raise (
-                APINotFoundError(_("输入的URL不合法。类名：{0}".format(cls.__name__)))
+                Exception(_("输入的URL不合法。类名：{0}".format(cls.__name__)))
             )
 
         transport = httpx.AsyncHTTPTransport(retries=5)
@@ -449,7 +445,7 @@ class AwemeIdFetcher:
                 if response.status_code in {200, 444}:
                     match = cls._TIKTOK_AWEMEID_PARREN.search(str(response.url))
                     if not match:
-                        raise APIResponseError(_("未在响应中找到aweme_id"))
+                        raise Exception(_("未在响应中找到aweme_id"))
 
                     aweme_id = match.group(1)
 
@@ -465,7 +461,7 @@ class AwemeIdFetcher:
                     )
 
             except httpx.RequestError:
-                raise APIConnectionError(
+                raise Exception(
                     _(
                         "连接端点失败，检查网络环境或代理：{0} 代理：{1} 类名：{2}"
                     ).format(
@@ -495,7 +491,7 @@ class AwemeIdFetcher:
 
         if urls == []:
             raise (
-                APINotFoundError(
+                Exception(
                     _("输入的URL List不合法。类名：{0}".format(cls.__name__))
                 )
             )
