@@ -1,15 +1,14 @@
 import asyncio
 import time
 from typing import List
-from unittest import TestCase, IsolatedAsyncioTestCase
 
 from motor.motor_asyncio import AsyncIOMotorCollection
 from pymongo import UpdateOne
 
-from f2.apps.database.main import TikTokDb
-from f2.apps.tiktok.crawler import TiktokCrawler
-from f2.apps.tiktok.filter import UserFollowingFilter
-from f2.apps.tiktok.model import UserFollowing
+from main import TikTokDb
+from crawler import TiktokCrawler
+from filter import UserFollowingFilter
+from model import UserFollowing
 
 
 class NewFollowingRelations:

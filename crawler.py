@@ -1,11 +1,11 @@
 
 import requests as requests
 
-from f2.apps.tiktok.api import TiktokAPIEndpoints as tkendpoint
-from f2.apps.tiktok.model import (
+from api import TiktokAPIEndpoints as tkendpoint
+from model import (
     UserProfile, UserPost, UserFollowing,
 )
-from f2.apps.tiktok.utils import XBogusManager
+from utils import XBogusManager
 
 headers = {
     "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36',
