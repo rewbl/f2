@@ -9,8 +9,6 @@ import time
 from typing import Union, Any
 from unittest.mock import Mock
 
-import httpx
-import importlib_resources
 import motor
 
 logger = Mock()
@@ -190,72 +188,6 @@ class XBogus:
 XB = XBogus
 
 
-class TokenManager:
-
-    @classmethod
-    def gen_real_msToken(cls) -> str:
-
-        payload = json.dumps(
-            {
-                "magic": 538969122,
-                "version": 1,
-                "dataType": 8,
-                "strData": '3BvqYbNXLLOcZehvxZVbjpAu7vq82RoWmFSJHLFwzDwJIZevE0AeilQfP55LridxmdGGjknoksqIsLqlMHMif0IFK/Br7JWqxOHnYuMwVCnttFc0Y4MFvdVWM5FECiEulJC0Dc+eeVsNSrFnAc9K7fazqdglyJgGLSfXIJmgyCvvQ4pg0u5HBVVugLSWs242X42fjoWymaUCLZJQo6vi6WLyuV7l5IC3Mg+lelr5xBQD6Q7hBIFEw8zzxJ1n2DyA4xLbOHTQdKvEtsK7XzyWwjpRnojPTbBl69Zosnuru+lOBIl+tFu/+hCQ1m0jYZwTP4rVE75L3Du6+KZ5v/9TyFYjq7y3y9bGLP4d7yQueJbF90G1yrZ6htElrZ2vqZKDrIqBVbmOZr/nph12k2JKrITtN0R/pMsp0sJ4gesQnXxcD/pLOFAINHk7umgbe6LzJ7+TLUdGuO4M7xiEg/jCqhjgJX1izZ4NPoBDp35zRxj6Y6OrcstlTN/cv5sz663+Nco/mEwhGq2VwrL4gAIAPycndIsb48dPdtngmLqNDNN0ZyVRjgqVIDXXrxigXCkR9CH89Dlrrb7QQqWVgRXz9/k5ihEM43BR3sd3mMU/XgFLN1Aoxf6GzzdxP2QPBI75/ZoHoAmu54v8gTmA3ntCGlEF0zgaFGTdpkGdb+oZgyQM4pw1aAyxmFINXkpD3IKKoGev9kD9gTFnhiQMGCMemhZS7ZYdbuGu0Cb+lQKaL/QTt80FMyGmW8kzVy9xW/ja9BcdEJYRoaufuFRkBFG5ay8x4WHLR6hEapXqQial/cREbLL4sQytpjtmnndFqvT7xN5DhgsLY2Z7451MJhD6NJXKNrMafGZSbItzQWY=',
-                "tspFromClient": get_timestamp(),
-            }
-        )
-
-        headers = {
-            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-            "Content-Type": "application/json",
-        }
-
-        transport = httpx.HTTPTransport(retries=5)
-        with httpx.Client(transport=transport) as client:
-            try:
-                response = client.post(
-                    'https://mssdk-sg.tiktok.com/web/common?msToken=1Ab-7YxR9lUHSem0PraI_XzdKmpHb6j50L8AaXLAd2aWTdoJCYLfX_67rVQFE4UwwHVHmyG_NfIipqrlLT3kCXps-5PYlNAqtdwEg7TrDyTAfCKyBrOLmhMUjB55oW8SPZ4_EkNxNFUdV7MquA=='
-                    , headers=headers, content=payload
-                )
-
-                if response.status_code == 401:
-                    raise Exception(_("由于某些错误, 无法获取msToken"))
-                elif response.status_code == 404:
-                    raise Exception(_("无法找到API端点"))
-
-                msToken = str(httpx.Cookies(response.cookies).get("msToken"))
-
-                if len(msToken) not in [148]:
-                    raise Exception(
-                        _(
-                            "msToken: 请检查并更新 f2 中 conf.yaml 配置文件中的 msToken，以匹配 tiktok 新规则。"
-                        )
-                    )
-
-                return msToken
-
-            except httpx.RequestError:
-                # 捕获所有与 httpx 请求相关的异常情况 (Captures all httpx request-related exceptions)
-                raise Exception(
-
-                )
-
-            except httpx.HTTPStatusError as e:
-                # 捕获 httpx 的状态代码错误 (captures specific status code errors from httpx)
-                raise Exception(
-                    f"HTTP Status Code {e.response.status_code}: {e.response.text}"
-                )
-
-            except Exception as e:
-                # 返回虚假的msToken (Return a fake msToken)
-                logger.info(_("生成虚假的msToken"))
-                return cls.gen_false_msToken()
-
-    @classmethod
-    def gen_false_msToken(cls) -> str:
-        """生成随机msToken (Generate random msToken)"""
-        return gen_random_str(146) + "=="
-
 
 class XBogusManager:
     @classmethod
@@ -318,8 +250,6 @@ def timestamp_2_str(
     return datetime.datetime.fromtimestamp(float(timestamp)).strftime(format)
 
 
-def get_resource_path(filepath: str):
-    return importlib_resources.files("f2") / filepath
 
 
 def replaceT(obj: Union[str, Any]) -> Union[str, Any]:
