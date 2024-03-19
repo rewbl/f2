@@ -158,7 +158,7 @@ class UserFollowingFilter(JSONModel):
     @property
 
     def is_list_invisible(self)->bool:
-        return self.statusCode == 10222
+        return self.statusCode in [10222, 10101]
 
 class UserProfileFilter(JSONModel):
     @property
