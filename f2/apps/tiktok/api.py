@@ -50,3 +50,5 @@ class TiktokAPIEndpoints:
 
     # 作品评论 (Post Comment)
     POST_COMMENT = f"{TIKTOK_DOMAIN}/api/comment/list/"
+
+    USER_FOLLOWING = f"{TIKTOK_DOMAIN}/api/user/list/"

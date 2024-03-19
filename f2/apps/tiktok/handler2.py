@@ -2,10 +2,10 @@
 
 from f2.apps.tiktok.crawler import TiktokCrawler
 from f2.apps.tiktok.filter import (
-    UserProfileFilter, UserPostFilter,
+    UserProfileFilter, UserPostFilter, UserFollowingFilter,
 )
 from f2.apps.tiktok.model import (
-    UserProfile, UserPost,
+    UserProfile, UserPost, UserFollowing,
 )
 from f2.cli.cli_console import RichConsoleManager
 from f2.i18n.translator import _
@@ -38,6 +38,13 @@ class TiktokHandler2:
         response = await crawler.fetch_user_posts(params)
         video = UserPostFilter(response)
         return video
+
+    async def get_user_following(self, secUid: str, minCursor: int = 0, maxCursor: int = 0):
+        crawler = TiktokCrawler()
+        params = UserFollowing(secUid=secUid, cursor=minCursor, maxCursor=maxCursor)
+        response = await crawler.fetch_user_following(params)
+        following = UserFollowingFilter(response)
+        return following
 
 async def main(kwargs):
     mode = kwargs.get("mode")

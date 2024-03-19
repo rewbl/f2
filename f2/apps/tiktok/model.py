@@ -1,13 +1,12 @@
 # path: f2/apps/tiktok/models.py
 
-from typing import Any, Optional
+from typing import Optional
+from urllib.parse import quote
 
-from f2.apps.douyin.utils import VerifyFpManager
 from pydantic import BaseModel
-from urllib.parse import quote, unquote
 
-from f2.apps.tiktok.utils import TokenManager
 from f2.utils.utils import get_timestamp
+
 
 # Model
 class BaseRequestModel(BaseModel):
@@ -58,6 +57,13 @@ class UserPost(BaseRequestModel):
     count: int = 35
     cursor: int = 0
     secUid: str
+
+class UserFollowing(BaseRequestModel):
+    count: int = 30
+    secUid: str
+    scene: int = 21
+    minCursor: int = 0
+    maxCursor: int = 0
 
 
 class UserLike(BaseRequestModel):

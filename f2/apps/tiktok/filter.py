@@ -6,6 +6,160 @@ from f2.utils.json_filter import JSONModel
 from f2.utils.utils import _get_first_item_from_list, timestamp_2_str, replaceT
 
 
+class UserSummaryFilter(JSONModel):
+    @property
+    def diggCount(self):
+        return self._get_attr_value("$.diggCount")
+
+    @property
+    def followerCount(self):
+        return self._get_attr_value("$.followerCount")
+
+    @property
+    def followingCount(self):
+        return self._get_attr_value("$.followingCount")
+
+    @property
+    def friendCount(self):
+        return self._get_attr_value("$.friendCount")
+
+    @property
+    def heart(self):
+        return self._get_attr_value("$.heart")
+
+    @property
+    def heartCount(self):
+        return self._get_attr_value("$.heartCount")
+
+    @property
+    def videoCount(self):
+        return self._get_attr_value("$.videoCount")
+
+    @property
+    def avatarLarger(self):
+        return self._get_attr_value("$.avatarLarger")
+
+    @property
+    def avatarMedium(self):
+        return self._get_attr_value("$.avatarMedium")
+
+    @property
+    def avatarThumb(self):
+        return self._get_attr_value("$.avatarThumb")
+
+    @property
+    def commentSetting(self):
+        return self._get_attr_value("$.commentSetting")
+
+    @property
+    def downloadSetting(self):
+        return self._get_attr_value("$.downloadSetting")
+
+    @property
+    def duetSetting(self):
+        return self._get_attr_value("$.duetSetting")
+
+    @property
+    def ftc(self):
+        return self._get_attr_value("$.ftc")
+
+    @property
+    def id(self):
+        return self._get_attr_value("$.id")
+
+    @property
+    def isADVirtual(self):
+        return self._get_attr_value("$.isADVirtual")
+
+    @property
+    def nickname(self):
+        return replaceT(self._get_attr_value("$.nickname"))
+
+    @property
+    def openFavorite(self):
+        return self._get_attr_value("$.openFavorite")
+
+    @property
+    def privateAccount(self):
+        return self._get_attr_value("$.privateAccount")
+
+    @property
+    def relation(self):
+        return self._get_attr_value("$.relation")
+
+    @property
+    def secUid(self):
+        return self._get_attr_value("$.secUid")
+
+    @property
+    def secret(self):
+        return self._get_attr_value("$.secret")
+
+    @property
+    def signature(self):
+        return replaceT(self._get_attr_value("$.signature"))
+
+    @property
+    def stitchSetting(self):
+        return self._get_attr_value("$.stitchSetting")
+
+    @property
+    def ttSeller(self):
+        return self._get_attr_value("$.ttSeller")
+
+    @property
+    def uniqueId(self):
+        return self._get_attr_value("$.uniqueId")
+
+    @property
+    def verified(self):
+        return self._get_attr_value("$.verified")
+
+    def _to_dict(self) -> dict:
+        return {
+            prop_name: getattr(self, prop_name)
+            for prop_name in dir(self)
+            if not prop_name.startswith("__") and not prop_name.startswith("_")
+        }
+
+
+class UserFollowingFilter(JSONModel):
+
+    def __init__(self, data):
+        self.__userList = None
+        super().__init__(data)
+
+    @property
+    def hasMore(self) -> bool:
+        return self._get_attr_value("$.hasMore")
+
+    @property
+    def maxCursor(self):
+        return self._get_attr_value("$.maxCursor")
+
+    @property
+    def minCursor(self):
+        return self._get_attr_value("$.minCursor")
+
+    @property
+    def total(self):
+        return self._get_attr_value("$.total")
+
+    @property
+    def statusCode(self):
+        return self._get_attr_value("$.statusCode")
+    @property
+    def userList(self) -> List[UserSummaryFilter]:
+        if self.__userList is None:
+            self.__userList = [UserSummaryFilter({**u['stats'], **u['user']}) for u in
+                               self._get_attr_value("$.userList") or []]
+        return self.__userList
+
+    @property
+
+    def is_list_invisible(self)->bool:
+        return self.statusCode == 10222
+
 class UserProfileFilter(JSONModel):
     @property
     def api_status_code(self):
@@ -321,8 +475,8 @@ class UserPostFilter(JSONModel):
             prop_name
             for prop_name in dir(self)
             if not prop_name.startswith("__")
-            and not prop_name.startswith("_")
-            and prop_name not in exclude_list
+               and not prop_name.startswith("_")
+               and prop_name not in exclude_list
         ]
 
         aweme_entries = self._get_attr_value("$.itemList") or []
@@ -612,8 +766,8 @@ class PostDetailFilter(JSONModel):
             prop_name
             for prop_name in dir(self)
             if not prop_name.startswith("__")
-            and not prop_name.startswith("_")
-            and prop_name not in exclude_list
+               and not prop_name.startswith("_")
+               and prop_name not in exclude_list
         ]
         aweme_entries = self._get_attr_value("$.itemInfo.itemStruct") or []
         list_dicts = []
