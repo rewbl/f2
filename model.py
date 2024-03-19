@@ -1,11 +1,12 @@
 # path: f2/apps/tiktok/models.py
-
+import json
 from typing import Optional
 from urllib.parse import quote
 
+from jsonpath_ng import parse
 from pydantic import BaseModel
 
-from f2.utils.utils import get_timestamp
+from utils import get_timestamp
 
 
 # Model
@@ -101,3 +102,34 @@ class PostComment(BaseRequestModel):
     count: int = 20
     cursor: int = 0
     current_region: str = ""
+
+
+class JSONModel:
+    def __init__(self, data):
+        self._data = data
+
+    def _get_attr_value(self, jsonpath_expr):
+        expr = parse(jsonpath_expr)
+        # expr = parser.parse(jsonpath_expr)
+        result = expr.find(self._data)
+        if result:
+            return (
+                [match.value for match in result]
+                if len(result) > 1
+                else result[0].value
+            )
+        return None
+
+    def _get_list_attr_value(self, jsonpath_expr, as_json=False):
+        values = self._get_attr_value(jsonpath_expr)
+
+        if isinstance(values, (list, tuple)):
+            if as_json:
+                return json.dumps(values, ensure_ascii=False)
+            return values
+        if as_json:
+            return (
+                json.dumps([values], ensure_ascii=False) if values is not None else "[]"
+            )
+
+        return [values] if values is not None else []

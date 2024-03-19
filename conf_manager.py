@@ -7,7 +7,12 @@ import yaml
 import click
 
 from pathlib import Path
-from f2.utils.utils import get_resource_path
+
+APP_CONFIG_FILE_PATH = "conf/app.yaml"
+F2_CONFIG_FILE_PATH = "conf/conf.yaml"
+F2_DEFAULTS_FILE_PATH = "conf/defaults.yaml"
+
+
 def _(msg):
     return msg
 logger=Mock()
@@ -19,6 +24,7 @@ class ConfigManager:
         if Path(filepath).exists():
             self.filepath = Path(filepath)
         else:
+            from utils import get_resource_path
             self.filepath = Path(get_resource_path(filepath))
         self.config = self.load_config()
 

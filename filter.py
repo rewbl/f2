@@ -2,8 +2,8 @@
 
 from typing import List, Union
 
-from f2.utils.json_filter import JSONModel
-from f2.utils.utils import _get_first_item_from_list, timestamp_2_str, replaceT
+from model import JSONModel
+from utils import timestamp_2_str, _get_first_item_from_list, replaceT
 
 
 class UserSummaryFilter(JSONModel):
