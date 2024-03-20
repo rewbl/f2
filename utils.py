@@ -1,7 +1,6 @@
 # path: f2/apps/tiktok/utils.py
 import datetime
 import hashlib
-import json
 import random
 import re
 import secrets
@@ -9,7 +8,7 @@ import time
 from typing import Union, Any
 from unittest.mock import Mock
 
-import motor
+from motor import motor_asyncio
 
 logger = Mock()
 
@@ -319,7 +318,7 @@ class TiktokAPIEndpoints:
 
 class TikTokMongoDb:
     def __init__(self):
-        self.client = motor.motor_asyncio.AsyncIOMotorClient(
+        self.client = motor_asyncio.AsyncIOMotorClient(
             'mongodb://192.168.196.85:27018,192.168.196.86:27018,192.168.196.87:27018/?replicaSet=tiktok')
         self.db = self.client['tiktok']
         self.following_lists = self.db['following_lists']

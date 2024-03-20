@@ -21,7 +21,12 @@ class StudioYClient:
         response = requests.get(f'{self.base_url}/tiktok-accounts/account-id', params={'shortCode': short_code}, verify=False)
         return response.json()
 
-
+    def link_account(self, short_code, user_json):
+        url = f'{self.base_url}/tiktok-accounts/link-user'
+        headers = {'Content-Type': 'application/json'}
+        params = {'shortCode': short_code}
+        response = requests.post(url, params=params, data=json.dumps(user_json), headers=headers, verify=False)
+        return response.json()
 
 def get_account_id_and_cookie(short_code):
     client = StudioYClient()
@@ -45,3 +50,4 @@ class TestStudioYClient(TestCase):
         set_result = client.set_cookie(accountId, cookie)
         cookie = client.get_cookie(accountId)['data']
         assert cookie == cookie
+

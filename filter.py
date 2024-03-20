@@ -243,6 +243,14 @@ class UserProfileFilter(JSONModel):
     def verified(self) -> bool:
         return bool(self._get_attr_value("$.userInfo.user.verified"))
 
+    @property
+    def avatarLarger(self):
+        return self._get_attr_value("$.userInfo.user.avatarLarger")
+
+    @property
+    def avatarThumb(self):
+        return self._get_attr_value("$.userInfo.user.avatarThumb")
+
     def _to_dict(self) -> dict:
         return {
             prop_name: getattr(self, prop_name)
