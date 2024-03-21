@@ -19,16 +19,18 @@ class TiktokCrawler:
         endpoint = XBogusManager.model_2_endpoint(
             tkendpoint.USER_DETAIL, params.dict()
         )  # fmt: off
-
-        response = requests.get(endpoint, headers=headers)
-        return response.json()
+        try:
+            response = requests.get(endpoint, headers=headers)
+            return response.json()
+        except Exception as e:
+            return {}
 
     async def fetch_user_posts(self, params: UserPost):
         endpoint = XBogusManager.model_2_endpoint(
             tkendpoint.USER_POST, params.dict()
         )
-        response = requests.get(endpoint, headers=headers)
         try:
+            response = requests.get(endpoint, headers=headers)
             return response.json()
         except Exception as e:
             return {}
@@ -37,8 +39,8 @@ class TiktokCrawler:
         endpoint = XBogusManager.model_2_endpoint(
             tkendpoint.USER_FOLLOWING, params.dict()
         )
-        response = requests.get(endpoint, headers=headers)
         try:
+            response = requests.get(endpoint, headers=headers)
             return response.json()
         except Exception as e:
             return {}
