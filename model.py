@@ -44,7 +44,7 @@ class BaseRequestModel(BaseModel):
     tz_name: str = quote("Asia/Hong_Kong", safe="")
     # verifyFp: str = VerifyFpManager.gen_verify_fp()
     # msToken: str = TokenManager.gen_real_msToken()
-    msToken: str = 'x541bHi1s7WSeHchOdUW2yAEOEP7zrlEl1OGzqFe6J3tq-HZYOtucwzWK2O_2gA3E9xoxmG7QN6dsaOp1T9HuCIbKNm4wLQv-nSuZhH8OQyUvHu2ySp1EDp5xt3STiYycrQ5VJg='
+    msToken: str = 'PKbOuxVD4GRRasliPootRA8a2deWAD_JfmaLFqdJ8IhdwH_2fQYo9qZlT7QrUtXdM5o4kRsLZ5vzeCVQmtHbDVKQUMd0IwXDrKNuV2l3F8y6fYWOOKWLUCrzT8YkcX3HLkwV6Iddhf9vXiQS'
 
 
 # router model
