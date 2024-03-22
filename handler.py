@@ -2,10 +2,10 @@
 
 from crawler import TiktokCrawler
 from filter import (
-    UserProfileFilter, UserPostFilter, UserFollowingFilter,
+    UserProfileFilter, UserPostsFilter, UserFollowingFilter,
 )
 from model import (
-    UserProfile, UserPost, UserFollowing,
+    UserProfile, UserPostRequest, UserFollowing,
 )
 
 class TikTokClient:
@@ -26,9 +26,9 @@ class TikTokClient:
 
     async def get_user_posts(self, secUid: str = "", cursor: int = 0):
         crawler = TiktokCrawler()
-        params = UserPost(secUid=secUid, cursor=cursor)
+        params = UserPostRequest(secUid=secUid, cursor=cursor)
         response = await crawler.fetch_user_posts(params)
-        video = UserPostFilter(response)
+        video = UserPostsFilter(response)
         return video
 
     async def get_user_following(self, secUid: str, minCursor: int = 0, maxCursor: int = 0):

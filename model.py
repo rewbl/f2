@@ -53,7 +53,7 @@ class UserProfile(BaseRequestModel):
     uniqueId: Optional[str] = ""
 
 
-class UserPost(BaseRequestModel):
+class UserPostRequest(BaseRequestModel):
     coverFormat: int = 2
     count: int = 35
     cursor: int = 0

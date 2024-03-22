@@ -2,7 +2,7 @@
 import requests as requests
 
 from model import (
-    UserProfile, UserPost, UserFollowing,
+    UserProfile, UserPostRequest, UserFollowing,
 )
 from utils import XBogusManager, TiktokAPIEndpoints as tkendpoint
 
@@ -25,7 +25,7 @@ class TiktokCrawler:
         except Exception as e:
             return {}
 
-    async def fetch_user_posts(self, params: UserPost):
+    async def fetch_user_posts(self, params: UserPostRequest):
         endpoint = XBogusManager.model_2_endpoint(
             tkendpoint.USER_POST, params.dict()
         )

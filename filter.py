@@ -1,6 +1,6 @@
 # path: f2/apps/tiktok/filter.py
 
-from typing import List
+from typing import List, Dict
 
 from model import JSONModel
 from utils import timestamp_2_str, replaceT
@@ -261,11 +261,72 @@ class UserProfileFilter(JSONModel):
 
 class UserPostFilter(JSONModel):
     @property
-    def api_status_code(self):
-        return self._get_attr_value("$.statusCode")
+    def author(self) -> Dict:
+        return self._get_attr_value("$.author")
 
     @property
-    def has_aweme(self) -> bool:
+    def awemeId(self):
+        return self._get_attr_value("$.id")
+
+    @property
+    def createTime(self):
+        return self._get_attr_value("$.createTime")
+
+    @property
+    def desc(self):
+        return replaceT(self._get_attr_value("$.desc"))
+
+    @property
+    def collectCount(self):
+        return self._get_attr_value("$.statsV2.collectCount")
+
+    @property
+    def commentCount(self):
+        return self._get_attr_value("$.statsV2.commentCount")
+
+    @property
+    def diggCount(self):
+        return self._get_attr_value("$.statsV2.diggCount")
+
+    @property
+    def playCount(self):
+        return self._get_attr_value("$.statsV2.playCount")
+
+    @property
+    def shareCount(self):
+        return self._get_attr_value("$.statsV2.shareCount")
+
+    @property
+    def music(self):
+        return self._get_attr_value("$.music")
+
+    @property
+    def videoCover(self):
+        return self._get_attr_value("$.video.cover")
+
+    @property
+    def videoRatio(self):
+        return self._get_attr_value("$.video.ratio")
+
+    @property
+    def videoHeight(self):
+        return self._get_attr_value("$.video.height")
+
+    @property
+    def videoWidth(self):
+        return self._get_attr_value("$.video.width")
+
+    def _to_dict(self) -> dict:
+        return {
+            prop_name: getattr(self, prop_name)
+            for prop_name in dir(self)
+            if not prop_name.startswith("__") and not prop_name.startswith("_")
+        }
+
+
+class UserPostsFilter(JSONModel):
+    @property
+    def hasAweme(self) -> bool:
         return bool(self._get_attr_value("$.itemList"))
 
     @property
@@ -277,196 +338,12 @@ class UserPostFilter(JSONModel):
         return self._get_attr_value("$.cursor")
 
     @property
-    def aweme_id(self):
-        ids = self._get_list_attr_value("$.itemList[*].id")
-        return ids if isinstance(ids, list) else [ids]
+    def statusCode(self):
+        return self._get_attr_value("$.statusCode")
 
     @property
-    def createTime(self):
-        create_times = self._get_list_attr_value("$.itemList[*].createTime")
-        return (
-            [timestamp_2_str(ct) for ct in create_times]
-            if isinstance(create_times, list)
-            else timestamp_2_str(create_times)
-        )
-
-    @property
-    def desc(self):
-        return replaceT(self._get_list_attr_value("$.itemList[*].desc"))
-
-    @property
-    def textExtra(self):
-        return self._get_list_attr_value("$.itemList[*].textExtra")
-
-    # author
-
-    @property
-    def nickname(self):
-        return replaceT(self._get_list_attr_value("$.itemList[*].author.nickname"))
-
-    @property
-    def uid(self):
-        return self._get_list_attr_value("$.itemList[*].author.id")
-
-    @property
-    def secUid(self):
-        return self._get_list_attr_value("$.itemList[*].author.secUid")
-
-    # your stats
-    @property
-    def collected(self):
-        return self._get_list_attr_value("$.itemList[*].collected")
-
-    @property
-    def digged(self):
-        return self._get_list_attr_value("$.itemList[*].digged")
-
-    @property
-    def duetDisplay(self):
-        return self._get_list_attr_value("$.itemList[*].duetDisplay")
-
-    @property
-    def duetEnabled(self):
-        return self._get_list_attr_value("$.itemList[*].duetEnabled")
-
-    @property
-    def forFriend(self):
-        return self._get_list_attr_value("$.itemList[*].forFriend")
-
-    @property
-    def isPinnedItem(self):
-        return self._get_list_attr_value("$.itemList[*].isPinnedItem")
-
-    @property
-    def itemCommentStatus(self):
-        return self._get_list_attr_value("$.itemList[*].itemCommentStatus")
-
-    @property
-    def privateItem(self):
-        return self._get_list_attr_value("$.itemList[*].privateItem")
-
-    @property
-    def secret(self):
-        return self._get_list_attr_value("$.itemList[*].secret")
-
-    @property
-    def shareEnabled(self):
-        return self._get_list_attr_value("$.itemList[*].shareEnabled")
-
-    # aweme stats
-    @property
-    def collectCount(self):
-        return self._get_list_attr_value("$.itemList[*].stats.collectCount")
-
-    @property
-    def commentCount(self):
-        return self._get_list_attr_value("$.itemList[*].stats.commentCount")
-
-    @property
-    def diggCount(self):
-        return self._get_list_attr_value("$.itemList[*].stats.diggCount")
-
-    @property
-    def playCount(self):
-        return self._get_list_attr_value("$.itemList[*].stats.playCount")
-
-    @property
-    def shareCount(self):
-        return self._get_list_attr_value("$.itemList[*].stats.shareCount")
-
-    # music
-    @property
-    def music_album(self):
-        return self._get_list_attr_value("$.itemList[*].music.album")
-
-    @property
-    def music_authorName(self):
-        return replaceT(self._get_list_attr_value("$.itemList[*].music.authorName"))
-
-    @property
-    def music_coverLarge(self):
-        return self._get_list_attr_value("$.itemList[*].music.coverLarge")
-
-    @property
-    def music_duration(self):
-        return self._get_list_attr_value("$.itemList[*].music.duration")
-
-    @property
-    def music_id(self):
-        return self._get_list_attr_value("$.itemList[*].music.id")
-
-    @property
-    def music_original(self):
-        return self._get_list_attr_value("$.itemList[*].music.original")
-
-    @property
-    def music_playUrl(self):
-        return self._get_list_attr_value("$.itemList[*].music.playUrl")
-
-    @property
-    def music_title(self):
-        return replaceT(self._get_list_attr_value("$.itemList[*].music.title"))
-
-    # video
-    @property
-    def video_bitrate(self):
-        return self._get_list_attr_value("$.itemList[*].video.bitrate")
-
-    # @property
-    # def video_bitrateInfo(self):
-    #     bit_rate_data = self._get_list_attr_value("$.itemList[*].video.bitrateInfo")
-    #     return [
-    #         [aweme["Bitrate"]]
-    #         if isinstance(aweme, dict)
-    #         else [aweme[0]["Bitrate"]]
-    #         if len(aweme) == 1
-    #         else [item["Bitrate"] for item in aweme]
-    #         for aweme in bit_rate_data
-    #     ]
-
-    @property
-    def video_bitrateInfo(self):
-        bit_rate_data = self._get_list_attr_value("$.itemList[*].video.bitrateInfo")
-        return [
-            [aweme.get("Bitrate", "")]  # 使用 get 方法以处理字典中没有 "Bitrate" 键的情况
-            if isinstance(aweme, dict)
-            else [aweme[0].get("Bitrate", "")]
-            if len(aweme) == 1
-            else [item.get("Bitrate", "") for item in aweme]
-            for aweme in bit_rate_data
-        ]
-
-    @property
-    def video_codecType(self):
-        return self._get_list_attr_value("$.itemList[*].video.codecType")
-
-    @property
-    def video_cover(self):
-        return self._get_list_attr_value("$.itemList[*].video.cover")
-
-    @property
-    def video_dynamicCover(self):
-        return self._get_list_attr_value("$.itemList[*].video.dynamicCover")
-
-    @property
-    def video_playAddr(self):
-        return self._get_list_attr_value("$.itemList[*].video.playAddr")
-
-    @property
-    def video_definition(self):
-        return self._get_list_attr_value("$.itemList[*].video.definition")
-
-    @property
-    def video_duration(self):
-        return self._get_list_attr_value("$.itemList[*].video.duration")
-
-    @property
-    def video_height(self):
-        return self._get_list_attr_value("$.itemList[*].video.height")
-
-    @property
-    def video_width(self):
-        return self._get_list_attr_value("$.itemList[*].video.width")
+    def itemList(self) -> List[UserPostFilter]:
+        return [UserPostFilter(item) for item in self._get_attr_value("$.itemList") or []]
 
     def _to_dict(self) -> dict:
         return {
@@ -475,47 +352,17 @@ class UserPostFilter(JSONModel):
             if not prop_name.startswith("__") and not prop_name.startswith("_")
         }
 
-    def _to_list(self):
-        # 定义不需要的属性列表
-        exclude_list = ["hasMore", "cursor", "has_aweme", "api_status_code"]
-        # 生成属性名称列表，然后过滤掉不需要的属性
-        keys = [
-            prop_name
-            for prop_name in dir(self)
-            if not prop_name.startswith("__")
-               and not prop_name.startswith("_")
-               and prop_name not in exclude_list
-        ]
-
-        aweme_entries = self._get_attr_value("$.itemList") or []
-
-        list_dicts = []
-        # 遍历每个条目并创建一个字典
-        # (Iterate through each entry and create a dict)
-        for entry in aweme_entries:
-            d = {"hasMore": self.hasMore, "cursor": self.cursor}
-            for key in keys:
-                attr_values = getattr(self, key)
-                # 当前aweme_entry在属性列表中的索引
-                index = aweme_entries.index(entry)
-                # 如果属性值的长度足够则赋值，否则赋None
-                # (Assign value if the length of the attribute value is sufficient, otherwise assign None)
-                d[key] = attr_values[index] if index < len(attr_values) else None
-            list_dicts.append(d)
-        return list_dicts
-
-
-class UserCollectFilter(UserPostFilter):
+class UserCollectFilter(UserPostsFilter):
     def __init__(self, data):
         super().__init__(data)
 
 
-class UserMixFilter(UserPostFilter):
+class UserMixFilter(UserPostsFilter):
     def __init__(self, data):
         super().__init__(data)
 
 
-class UserLikeFilter(UserPostFilter):
+class UserLikeFilter(UserPostsFilter):
     def __init__(self, data):
         super().__init__(data)
 
