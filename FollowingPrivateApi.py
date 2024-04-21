@@ -66,9 +66,9 @@ class FollowListCandidates:
         # If no document was found in following_lists, check the douyin_follow_list_candidates collection
         candidates_collection = TikTokDb.tiktok_follow_list_candidates
         query = {
-            "aweme_count": {"$gt": 100},
-            "total_favorited": {"$gt": 100 * 1000},
-            "follower_count": {"$gt": 1000 * 1000},
+            "aweme_count": {"$gt": 10},
+            "total_favorited": {"$gt": 10 * 1000},
+            "follower_count": {"$gt": 100 * 1000},
             "following_count": {"$gte": 500, "$lte": 5000}  # updated this line
         }
         documents = await candidates_collection.find(query).sort("following_count", -1).limit(1).to_list(None)

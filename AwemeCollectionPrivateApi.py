@@ -1,14 +1,20 @@
+import asyncio
+import time
+from pprint import pprint
 from typing import List, Dict
 from unittest import IsolatedAsyncioTestCase
 
+from StudioY.StudioYClient import StudioYClient, StudioYMapper
 from crawler import TiktokCrawler
 from filter import UserPostsFilter
 from model import UserPostRequest
 
 
 class IUserPostRecipient:
-    def on_post_list(self, aweme_list: List[Dict]) -> bool:
-        return bool(aweme_list)
+    def on_post_list(self, posts: UserPostsFilter) -> bool:
+        res = StudioYClient().sync_user_videos(posts.itemList)
+        pprint(res)
+        return bool(res and res.get('isSuccess'))
 
 
 class AwemeCollection:
@@ -67,11 +73,43 @@ class AwemeCollection:
             return
         self.__last_retry += 1
 
+class AwemeCollectionSpider:
+
+    error_count = 0
+    async def __sync_all_accounts(self):
+        accs = StudioYClient().get_all_sec_uids()
+        for sec_uid in accs:
+            print(f'\r\n{sec_uid}')
+            collection = AwemeCollection(sec_uid, IUserPostRecipient())
+            try:
+                await collection.load_full_list()
+                self.error_count = 0
+            except Exception as e:
+                self.error_count += 1
+                print(e)
+
+    async def sync_forever(self):
+        while True:
+            start_time = time.time()
+            await self.__sync_all_accounts()
+            if self.error_count > 10:
+                print('Too many errors, exiting')
+                break
+            end_time = time.time()
+            execution_time = end_time - start_time
+            print(f"Execution time: {execution_time} seconds")
+            sleep_time = max(900 - execution_time, 0)
+            await asyncio.sleep(sleep_time)
 
 class TestAwemeCollectionPrivateApi(IsolatedAsyncioTestCase):
 
     async def test_request(self):
-        collection=AwemeCollection('MS4wLjABAAAAf09jdtPRY2fU6z-1DjXCP8HWH1CGiN5RmjXyxouWng3TA-3LtsMlJGGtwLCQNHY7',
-                                   IUserPostRecipient())
+        collection = AwemeCollection('MS4wLjABAAAAMUO3QAXA8dzE8GiaYn3RtvPGkqLVYG6bWnQkgF93Wdz8SWRlR4n77UuZWmaTn_fq',
+                                     IUserPostRecipient())
         await collection.load_full_list()
         breakpoint()
+
+
+    async def test_sync_forever(self):
+        spider = AwemeCollectionSpider()
+        await spider.sync_forever()

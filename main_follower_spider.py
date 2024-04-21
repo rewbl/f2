@@ -10,6 +10,5 @@ async def main():
         following_list = FollowingList(private_user_id)
         await following_list.load_full_list()
 
-
 if __name__ == '__main__':
     asyncio.run(main())

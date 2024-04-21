@@ -6,6 +6,7 @@ from urllib.parse import quote
 from jsonpath_ng import parse
 from pydantic import BaseModel
 
+from config import MSTOKEN
 from utils import get_timestamp
 
 
@@ -44,7 +45,7 @@ class BaseRequestModel(BaseModel):
     tz_name: str = quote("Asia/Hong_Kong", safe="")
     # verifyFp: str = VerifyFpManager.gen_verify_fp()
     # msToken: str = TokenManager.gen_real_msToken()
-    msToken: str = 'PKbOuxVD4GRRasliPootRA8a2deWAD_JfmaLFqdJ8IhdwH_2fQYo9qZlT7QrUtXdM5o4kRsLZ5vzeCVQmtHbDVKQUMd0IwXDrKNuV2l3F8y6fYWOOKWLUCrzT8YkcX3HLkwV6Iddhf9vXiQS'
+    msToken: str = MSTOKEN
 
 
 # router model
