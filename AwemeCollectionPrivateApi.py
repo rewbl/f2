@@ -87,6 +87,7 @@ class AwemeCollectionSpider:
             except Exception as e:
                 self.error_count += 1
                 print(e)
+            await asyncio.sleep(30)
 
     async def sync_forever(self):
         while True:
@@ -98,7 +99,7 @@ class AwemeCollectionSpider:
             end_time = time.time()
             execution_time = end_time - start_time
             print(f"Execution time: {execution_time} seconds")
-            sleep_time = max(900 - execution_time, 0)
+            sleep_time = max(1800 - execution_time, 0)
             await asyncio.sleep(sleep_time)
 
 class TestAwemeCollectionPrivateApi(IsolatedAsyncioTestCase):
