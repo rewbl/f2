@@ -1,10 +1,9 @@
 import asyncio
 import time
 from pprint import pprint
-from typing import List, Dict
 from unittest import IsolatedAsyncioTestCase
 
-from StudioY.StudioYClient import StudioYClient, StudioYMapper
+from StudioY.StudioYClient import StudioYClient
 from crawler import TiktokCrawler
 from filter import UserPostsFilter
 from model import UserPostRequest
