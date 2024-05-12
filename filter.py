@@ -2,7 +2,7 @@
 
 from typing import List, Dict
 
-from model import JSONModel
+from crawler import JSONModel
 from utils import timestamp_2_str, replaceT
 
 
@@ -148,6 +148,7 @@ class UserFollowingFilter(JSONModel):
     @property
     def statusCode(self):
         return self._get_attr_value("$.statusCode")
+
     @property
     def userList(self) -> List[UserSummaryFilter]:
         if self.__userList is None:
@@ -156,9 +157,9 @@ class UserFollowingFilter(JSONModel):
         return self.__userList
 
     @property
-
-    def is_list_invisible(self)->bool:
+    def is_list_invisible(self) -> bool:
         return self.statusCode in [10222, 10101]
+
 
 class UserProfileFilter(JSONModel):
     @property
@@ -338,6 +339,10 @@ class UserPostsFilter(JSONModel):
         return self._get_attr_value("$.cursor")
 
     @property
+    def level(self):
+        return self._get_attr_value("$.level")
+
+    @property
     def statusCode(self):
         return self._get_attr_value("$.statusCode")
 
@@ -351,6 +356,7 @@ class UserPostsFilter(JSONModel):
             for prop_name in dir(self)
             if not prop_name.startswith("__") and not prop_name.startswith("_")
         }
+
 
 class UserCollectFilter(UserPostsFilter):
     def __init__(self, data):

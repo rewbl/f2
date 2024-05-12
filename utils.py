@@ -286,6 +286,8 @@ class TiktokAPIEndpoints:
     # 用户作品 (User Post)
     USER_POST = f"{TIKTOK_DOMAIN}/api/post/item_list/"
 
+    USER_FEED = f"{TIKTOK_DOMAIN}/api/following/item_list/"
+
     # 用户点赞 (User Like)
     USER_LIKE = f"{TIKTOK_DOMAIN}/api/favorite/item_list/"
 

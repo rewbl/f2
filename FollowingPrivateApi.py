@@ -6,9 +6,8 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 from pymongo import UpdateOne
 
 from utils import TikTokDb
-from crawler import TiktokCrawler
+from crawler import TiktokCrawler, UserFollowing
 from filter import UserFollowingFilter
-from model import UserFollowing
 
 
 class NewFollowingRelations:

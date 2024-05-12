@@ -1,7 +1,7 @@
 import asyncio
 
 from handler import TikTokClient
-from model import UserPostRequest
+from crawler import UserPostRequest
 
 
 async def main():

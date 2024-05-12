@@ -1,12 +1,10 @@
 # path: f2/apps/tiktok/handler.py
 
-from crawler import TiktokCrawler
+from crawler import TiktokCrawler, UserProfile, UserPostRequest, UserFollowing
 from filter import (
     UserProfileFilter, UserPostsFilter, UserFollowingFilter,
 )
-from model import (
-    UserProfile, UserPostRequest, UserFollowing,
-)
+
 
 class TikTokClient:
 

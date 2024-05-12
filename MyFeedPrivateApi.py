@@ -3,29 +3,33 @@ import time
 from pprint import pprint
 from unittest import IsolatedAsyncioTestCase
 
-from StudioY.StudioYClient import StudioYClient
-from crawler import TiktokCrawler, UserPostRequest
+from StudioY.StudioYClient import StudioYClient, get_account_id_and_cookie
+from crawler import TiktokCrawler, UserPostRequest, MyFeedRequest
 from filter import UserPostsFilter
 
-
-class IUserPostRecipient:
+aweme_ids = set()
+class IFeedPostRecipient:
     def on_post_list(self, posts: UserPostsFilter) -> bool:
-        res = StudioYClient().sync_user_videos(posts.itemList)
-        pprint(res)
-        return bool(res and res.get('isSuccess'))
+        # res = StudioYClient().sync_user_videos(posts.itemList)
+        # pprint(res)
+        # return bool(res and res.get('isSuccess'))
+        aweme_ids.update([post.awemeId for post in posts.itemList])
+        breakpoint()
+        return posts
 
 
-class AwemeCollection:
-    __last_request: UserPostRequest | None
+class MyFeed:
+    __last_request: MyFeedRequest | None
     __last_response: UserPostsFilter | None
     __last_success_response: UserPostsFilter | None
     __can_continue: bool
     __load_complete: bool
+    __cookie: str = None
 
-    def __init__(self, sec_uid: str, recipient: IUserPostRecipient = None):
+    def __init__(self, recipient: IFeedPostRecipient = None, cookie: str = None):
+        self.__cookie = cookie
         self.recipient = recipient
-        self.api = TiktokCrawler()
-        self.sec_uid = sec_uid
+        self.api = TiktokCrawler(self.__cookie)
         self.__last_request = None
         self.__last_response = None
         self.__can_continue = True
@@ -38,7 +42,7 @@ class AwemeCollection:
             await self.__load_next_page()
 
     async def __load_next_page(self):
-        self.__last_response = UserPostsFilter(await self.api.fetch_user_posts(self.__next_page_request))
+        self.__last_response = UserPostsFilter(await self.api.fetch_my_feeds(self.__next_page_request))
 
         if self.__last_response.hasAweme:
             await self.__process_success_response()
@@ -46,9 +50,10 @@ class AwemeCollection:
             await self.__process_failed_response()
 
     @property
-    def __next_page_request(self) -> UserPostRequest:
+    def __next_page_request(self) -> MyFeedRequest:
         cursor = self.__last_response.cursor if self.__last_response else 0
-        self.__last_request = UserPostRequest(secUid=self.sec_uid, cursor=cursor)
+        level = self.__last_response.level if self.__last_response else 1
+        self.__last_request = MyFeedRequest(cursor=cursor, level=level)
         return self.__last_request
 
     async def __process_success_response(self):
@@ -71,21 +76,18 @@ class AwemeCollection:
             return
         self.__last_retry += 1
 
-class AwemeCollectionSpider:
+class MyFeedSpider:
 
     error_count = 0
     async def __sync_all_accounts(self):
-        accs = StudioYClient().get_all_sec_uids()
-        for sec_uid in accs:
-            print(f'\r\n{sec_uid}')
-            collection = AwemeCollection(sec_uid, IUserPostRecipient())
-            try:
-                await collection.load_full_list()
-                self.error_count = 0
-            except Exception as e:
-                self.error_count += 1
-                print(e)
-            await asyncio.sleep(30)
+        account_id, cookie = get_account_id_and_cookie('FEED1')
+        my_feed = MyFeed(IFeedPostRecipient(), cookie)
+        try:
+            await my_feed.load_full_list()
+            self.error_count = 0
+        except Exception as e:
+            self.error_count += 1
+            print(e)
 
     async def sync_forever(self):
         while True:
@@ -100,15 +102,15 @@ class AwemeCollectionSpider:
             sleep_time = max(1800 - execution_time, 0)
             await asyncio.sleep(sleep_time)
 
-class TestAwemeCollectionPrivateApi(IsolatedAsyncioTestCase):
+class TestMyFeedPrivateApi(IsolatedAsyncioTestCase):
 
     async def test_request(self):
-        collection = AwemeCollection('MS4wLjABAAAAMUO3QAXA8dzE8GiaYn3RtvPGkqLVYG6bWnQkgF93Wdz8SWRlR4n77UuZWmaTn_fq',
-                                     IUserPostRecipient())
-        await collection.load_full_list()
+        # account_id, cookie = get_account_id_and_cookie('FEED1')
+        # my_feed = MyFeed(IFeedPostRecipient(), cookie)
+        my_feed = MyFeed(IFeedPostRecipient())
+        await my_feed.load_full_list()
         breakpoint()
 
-
     async def test_sync_forever(self):
-        spider = AwemeCollectionSpider()
+        spider = MyFeedSpider()
         await spider.sync_forever()
